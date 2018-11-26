@@ -737,6 +737,15 @@ if(swift_build_android AND NOT "${SWIFT_ANDROID_NDK_PATH}" STREQUAL "")
   configure_sdk_unix("Android" "${SWIFT_SDK_ANDROID_ARCHITECTURES}")
 endif()
 
+# Should we cross-compile the standard library for Wasm?
+is_sdk_requested(WASM swift_build_wasm)
+if(swift_build_wasm)
+  if("${SWIFT_SDK_WASM_ARCHITECTURES}" STREQUAL "")
+    set(SWIFT_SDK_WASM_ARCHITECTURES wasm32)
+  endif()
+  configure_sdk_wasm("Wasm" "${SWIFT_SDK_WASM_ARCHITECTURES}")
+endif()
+
 # Should we cross-compile the standard library for Windows?
 is_sdk_requested(WINDOWS swift_build_windows)
 if(swift_build_windows AND NOT "${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")

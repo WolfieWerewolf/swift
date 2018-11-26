@@ -300,6 +300,32 @@ macro(configure_sdk_windows name environment architectures)
   _report_sdk("${prefix}")
 endmacro()
 
+macro(configure_sdk_wasm name architectures)
+  # Note: this has to be implemented as a macro because it sets global
+  # variables.
+
+  string(TOUPPER ${name} prefix)
+  string(TOLOWER ${name} platform)
+
+  set(SWIFT_SDK_${prefix}_NAME "${name}")
+  set(SWIFT_SDK_${prefix}_LIB_SUBDIR "wasm")
+  set(SWIFT_SDK_${prefix}_ARCHITECTURES "${architectures}")
+  set(SWIFT_SDK_${prefix}_OBJECT_FORMAT "WASM")
+
+  foreach(arch ${architectures})
+    set(SWIFT_SDK_${prefix}_ARCH_${arch}_TRIPLE
+          "${arch}-unknown-unknown-wasm")
+    if(NOT SWIFT_SDK_${prefix}_ARCH_${arch}_PATH)
+      set(SWIFT_SDK_${prefix}_ARCH_${arch}_PATH "/")
+    endif()
+  endforeach()
+
+  # Add this to the list of known SDKs.
+  list(APPEND SWIFT_CONFIGURED_SDKS "${prefix}")
+
+  _report_sdk("${prefix}")
+endmacro()
+
 # Configure a variant of a certain SDK
 #
 # In addition to the SDK and architecture, a variant determines build settings.
